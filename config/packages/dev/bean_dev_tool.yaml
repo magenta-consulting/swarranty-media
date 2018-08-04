@@ -1,0 +1,8 @@
+bean_dev_tool:
+    library_source: /srv/http/libraries/
+    library_workspace: /srv/http/smart-warranty-media/libraries/
+    components: ~
+    bundles:
+        - MagentaSWarrantyModelBundle
+        - MagentaSWarrantyJWTBundle
+        - MagentaSWarrantyMediaApiBundle

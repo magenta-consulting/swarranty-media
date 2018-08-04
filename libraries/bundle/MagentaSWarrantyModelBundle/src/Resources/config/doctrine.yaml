@@ -1,0 +1,91 @@
+services:
+    magenta_doctrine_entity_listener_person:
+        class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Person\PersonListener
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_organisation_member:
+        class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Organisation\OrganisationMemberListener
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_service_note:
+        class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Customer\ServiceNoteListener
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_service_sheet:
+        class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Customer\ServiceSheetListener
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_customer:
+        class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Customer\CustomerListener
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_appointment:
+        class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Customer\CaseAppointmentListener
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_warranty:
+            class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Customer\WarrantyListener
+            arguments:
+                - '@service_container'
+            tags:
+                - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_warranty_case:
+            class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Customer\WarrantyCaseListener
+            arguments:
+                - '@service_container'
+            tags:
+                - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_registration:
+            class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Customer\RegistrationListener
+            arguments:
+                - '@service_container'
+            tags:
+                - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_product:
+            class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Product\ProductListener
+            arguments:
+                - '@service_container'
+            tags:
+                - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_full_text_search:
+            class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\System\FullTextSearchListener
+            arguments:
+                - '@service_container'
+            tags:
+                - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_thing:
+            class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\System\ThingListener
+            arguments:
+                - '@service_container'
+            tags:
+                - { name: doctrine.orm.entity_listener }
+
+    magenta_doctrine_entity_listener_system:
+            class: Magenta\Bundle\SWarrantyModelBundle\Doctrine\System\SystemListener
+            arguments:
+                - '@service_container'
+            tags:
+                - { name: doctrine.orm.entity_listener }

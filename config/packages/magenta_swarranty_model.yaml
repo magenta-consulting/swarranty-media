@@ -1,0 +1,535 @@
+parameters:
+    s3_version: latest
+    s3_bucket_name: magenta-consulting
+    s3_access_key: '%env(resolve:AWS_S3_ACCESS_KEY)%'
+    s3_secret_key: '%env(resolve:AWS_S3_SECRET_KEY)%'
+    s3_region: ap-southeast-1
+    s3_directory: '%env(resolve:AWS_S3_DIR)%'
+
+    MEDIA_API_BASE_URL: '%env(resolve:MEDIA_API_BASE_URL)%'
+    MEDIA_API_PREFIX: '%env(MEDIA_API_PREFIX)%'
+    PDF_API_BASE_URL:  '%env(resolve:PDF_API_BASE_URL)%'
+    PDF_DOWNLOAD_PREFIX: '%env(resolve:PDF_DOWNLOAD_PREFIX)%'
+
+doctrine:
+    dbal:
+        types:
+            magenta_json: Magenta\Bundle\SWarrantyModelBundle\Doctrine\Types\JsonType
+            json: Sonata\Doctrine\Types\JsonType
+
+    orm:
+        entity_managers:
+            default:
+                mappings:
+                    SonataMediaBundle: ~
+                entity_listeners:
+                    entities:
+#                    Will not work for Mere Interfaces
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\System\\FullTextSearch"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\System\\FullTextSearchListener"
+                                    event:
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\System\\Thing"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\System\\ThingListener"
+                                    event:
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Customer\\Customer"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Customer\\CustomerListener"
+                                    event:
+                                        -
+                                            type: postLoad
+                                            method: postLoadHandler
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Customer\\Registration"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Customer\\RegistrationListener"
+                                    event:
+                                        -
+                                            type: postLoad
+                                            method: postLoadHandler
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Customer\\CaseAppointment"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Customer\\CaseAppointmentListener"
+                                    event:
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Customer\\Warranty"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Customer\\WarrantyListener"
+                                    event:
+                                        -
+                                            type:  preFlush
+                                            method: preFlushHandler
+                                        -
+                                            type: postLoad
+                                            method: postLoadHandler
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Customer\\WarrantyCase"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Customer\\WarrantyCaseListener"
+                                    event:
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Customer\\ServiceNote"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Customer\\ServiceNoteListener"
+                                    event:
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Customer\\ServiceSheet"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Customer\\ServiceSheetListener"
+                                    event:
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+                                        -
+                                            type: postLoad
+                                            method: postLoadHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Product\\Product"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Product\\ProductListener"
+                                    event:
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Organisation\\OrganisationMember"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Organisation\\OrganisationMemberListener"
+                                    event:
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\Person\\Person"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Person\\PersonListener"
+                                    event:
+                                        -
+                                            type: preFlush
+                                            method: preFlushHandler
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+
+                        -
+                            class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\System\\System"
+                            listener:
+                                -
+                                    class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\System\\SystemListener"
+                                    event:
+                                        -
+                                            type: preFlush
+                                            method: preFlushHandler
+                                        -
+                                            type: postPersist
+                                            method: postPersistHandler
+                                        -
+                                            type: postUpdate
+                                            method: postUpdateHandler
+                                        -
+                                            type: prePersist
+                                            method: prePersistHandler
+                                        -
+                                            type: preUpdate
+                                            method: preUpdateHandler
+                                        -
+                                            type: preRemove
+                                            method: preRemoveHandler
+                                        -
+                                            type: postRemove
+                                            method: postRemoveHandler
+                filters:
+
+                    # An array of filters
+                    organisation_member_filter:
+                        class:                'Magenta\Bundle\SWarrantyModelBundle\Doctrine\Organisation\OrganisationMemberFilter' # Required
+                        enabled:              false
+
+                        # An array of parameters
+                        parameters:
+
+                            # example
+                            foo_param:              bar_value
+
+security:
+    encoders:
+        Magenta\Bundle\SWarrantyModelBundle\Entity\User\UserInterface: bcrypt
+
+    providers:
+        magenta_user:
+            id: magenta_user.user_provider.username_email
+        magenta_username:
+            id: magenta_user.user_provider.username
+
+
+    role_hierarchy:
+        ROLE_POWER_USER: [ROLE_USER,ROLE_SONATA_ADMIN]
+        ROLE_ADMIN:       [ROLE_POWER_USER]
+        ROLE_ALLOWED_TO_SWITCH: ~
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    # set access_strategy to unanimous, else you may have unexpected behaviors
+    access_decision_manager:
+        strategy: unanimous
+
+sonata_media:
+    default_context: default
+    contexts:
+        service_sheet:
+            providers:
+                - sonata.media.provider.image
+            download:
+                strategy: sonata.media.security.public_strategy
+                mode: http
+
+        receipt_image:
+            providers:
+                - sonata.media.provider.image
+            download:
+                strategy: sonata.media.security.public_strategy
+                mode: http
+
+        product_image:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 600 , quality: 70}
+            download:
+                strategy: sonata.media.security.public_strategy
+                mode: http
+
+        brand_logo:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 500 , quality: 70}
+            download:
+                strategy: sonata.media.security.public_strategy
+                mode: http
+
+        organisation_logo:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 200 , quality: 70}
+            download:
+                strategy: sonata.media.security.public_strategy
+                mode: http
+
+
+        default:
+            download:
+                strategy: sonata.media.security.public_strategy
+                mode: http
+
+            providers:
+                - sonata.media.provider.dailymotion
+                - sonata.media.provider.youtube
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.vimeo
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 500 , quality: 70}
+
+    cdn:
+        server:
+            path: 'https://s3-%s3_region%.amazonaws.com/%s3_bucket_name%/%s3_directory%'
+            #https://s3-ap-southeast-1.amazonaws.com/magenta-consulting/local/default/0001/01/c5971b853c7c1407ebdb7dd7f0a31bf845aee71e.jpeg
+#            path: /upload/media
+    providers:
+        image:
+            filesystem: sonata.media.filesystem.s3
+
+    filesystem:
+        local:
+            # Directory for uploads should be writable
+            directory: "%kernel.project_dir%/public/upload/media"
+            create: false
+        s3:
+            bucket:      '%s3_bucket_name%'
+            accessKey:   '%s3_access_key%'
+            secretKey:   '%s3_secret_key%'
+            region:      '%s3_region%'
+            version:     '%s3_version%' # latest by default (cf. https://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/configuration.html#version)
+            sdk_version: 3
+#            sdk_version: '%s3_sdk_version%' # 2 by default
+
+            directory:   "%s3_directory%"
+
+            create:         false
+            #region:         s3.amazonaws.com # change if not using US Standard region
+            storage:        standard # can be one of: standard or reduced
+            acl:            private # this no longer works, private by default can be one of: public, private, open, auth_read, owner_read, owner_full_control
+#            encryption:     aes256 # can be aes256 or not set
+            cache_control:  max-age=86400 # or any other
+#            meta:
+ #               key1:       value1 #any amount of metas(sent as x-amz-meta-key1 = value1)
+    # if you don't use default namespace configuration
+    class:
+        media: Magenta\Bundle\SWarrantyModelBundle\Entity\Media\Media
+        gallery: Magenta\Bundle\SWarrantyModelBundle\Entity\Media\Gallery
+        gallery_has_media: Magenta\Bundle\SWarrantyModelBundle\Entity\Media\GalleryHasMedia
+    db_driver: doctrine_orm # could be doctrine_orm, doctrine_mongodb or doctrine_phpcr
+
+monolog:
+    handlers:
+        critical_error_logging:
+            type:         fingers_crossed
+            action_level: critical
+            handler:      grouped
+        grouped:
+            type:    group
+            members: [streamed, deduplicated]
+        streamed:
+            type:  stream
+            path:  '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+        deduplicated:
+            type: deduplication
+            # the time in seconds during which duplicate entries are discarded (default: 60)
+            time: 60
+            handler: swift
+        swift:
+            type:       swift_mailer
+            from_email: 'no-reply@magentapulse.com'
+            to_email:   'binh@sunrise.vn'
+            subject:    'SWarranty - An Error Occurred! %%message%%'
+            level:      debug
+            formatter:  monolog.formatter.html
+            content_type: text/html
