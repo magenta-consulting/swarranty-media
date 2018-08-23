@@ -28,7 +28,7 @@ class WarrantyCaseListener {
 	private function updateInfAfterOperation(WarrantyCase $case, LifecycleEventArgs $event) {
 		$this->updateInfo($case, $event);
 		$manager = $event->getEntityManager();
-		$manager->flush();
+		$manager->flush($case);
 	}
 	
 	private function updateInfo(WarrantyCase $case, LifecycleEventArgs $event) {
@@ -51,7 +51,7 @@ class WarrantyCaseListener {
 		} else {
 			$pc->initiateNumber();
 			$pc->addChild($case);
-			$case = $pc->getNumber() . '-' . $pc->getChildren()->count();
+			$caseNumber = $pc->getNumber() . '-' . $pc->getChildren()->count();
 		}
 		////////////// update Appointment /////////////////////
 		
@@ -114,18 +114,22 @@ class WarrantyCaseListener {
 			}
 		}
 		
-		if($serviceSheets->count() > 0 && ! empty($apmt)) {
-			/** @var ServiceSheet $ss */
-			foreach($serviceSheets as $ss) {
-				if( empty($ss->getAppointment())) {
-					$ss->setAppointment($apmt);
-					$apmt->setServiceSheet($ss);
-					$manager->persist($ss);
-					break;
+		if( ! empty($apmt)) {
+			if($serviceSheets->count() > 0) {
+				/** @var ServiceSheet $ss */
+				foreach($serviceSheets as $ss) {
+					if(empty($ss->getAppointment())) {
+						$ss->setAppointment($apmt);
+						$apmt->setServiceSheet($ss);
+						$manager->persist($ss);
+						break;
+					}
 				}
+			} else {
+			
 			}
+			
 		}
-		
 	}
 	
 	public function updateInfBeforeOperation(WarrantyCase $case, LifecycleEventArgs $event) {
@@ -156,7 +160,10 @@ class WarrantyCaseListener {
 	public function postUpdateHandler(WarrantyCase $case, LifecycleEventArgs $event) {
 //		$this->handleAdminEmail($case);
 		$this->updateInfAfterOperation($case, $event);
-//		$manager = $event->getEntityManager();
+		$manager = $event->getEntityManager();
+		$uow     = $manager->getUnitOfWork();
+//		$uow->computeChangeSet($manager->getClassMetadata(WarrantyCase::class), $case);
+//		$uow->recomputeSingleEntityChangeSet($manager->getClassMetadata(WarrantyCase::class), $case);
 	}
 	
 	public function prePersistHandler(WarrantyCase $case, LifecycleEventArgs $event) {

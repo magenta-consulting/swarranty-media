@@ -22,5 +22,6 @@ return [
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Magenta\Bundle\SWarrantyModelBundle\MagentaSWarrantyModelBundle::class => ['all' => true, 'test' => true],
     Magenta\Bundle\SWarrantyMediaApiBundle\MagentaSWarrantyMediaApiBundle::class => ['all' => true, 'test' => true],
-    Magenta\Bundle\SWarrantyJWTBundle\MagentaSWarrantyJWTBundle::class => ['all' => true, 'test' => true]
+    Magenta\Bundle\SWarrantyJWTBundle\MagentaSWarrantyJWTBundle::class => ['all' => true, 'test' => true],
+    Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
 ];

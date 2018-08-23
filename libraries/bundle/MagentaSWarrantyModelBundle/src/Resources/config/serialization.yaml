@@ -33,7 +33,7 @@ Magenta\Bundle\SWarrantyModelBundle\Entity\Organisation\OrganisationMember:
             groups: ['read_member','write_member']
         organization:
             groups: ['read_member','write_member']
-        assignedCases:
+        assignedOpenCases:
             groups: ['read_member','write_member']
 
 Magenta\Bundle\SWarrantyModelBundle\Entity\Person\Person:
@@ -89,6 +89,8 @@ Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\Warranty:
             groups: ['read_warranty','write_warranty','read_registration_warranty']
         dealerName:
             groups: ['read_warranty','write_warranty','read_registration_warranty']
+        dealer:
+          groups: ['read_warranty','write_warranty','read_registration_warranty']
 
 Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\WarrantyCase:
     attributes:
@@ -118,6 +120,8 @@ Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\WarrantyCase:
         serviceZone:
             groups: ['read_case','write_case']
         description:
+            groups: ['read_case','write_case']
+        specialRemarks:
             groups: ['read_case','write_case']
 
 Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\CaseAppointment:
@@ -155,6 +159,8 @@ Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\Customer:
             groups: ['read_customer','write_customer']
         homePostalCode:
             groups: ['read_customer','write_customer']
+        addressUnitNumber:
+            groups: ['read_customer','write_customer']
 
 Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\NewsletterSubscription:
     attributes:
@@ -173,6 +179,53 @@ Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\Registration:
             groups: ['read_registration','write_registration']
         verified:
             groups: ['read_registration']
+        name:
+            groups: ['read_registration','write_registration']
+        email:
+            groups: ['read_registration','write_registration']
+        dialingCode:
+            groups: ['read_registration','write_registration']
+        telephone:
+            groups: ['read_registration','write_registration']
+        homeAddress:
+            groups: ['read_registration','write_registration']
+        homePostalCode:
+            groups: ['read_registration','write_registration']
+        addressUnitNumber:
+            groups: ['read_registration','write_registration']
+
+        ageGroup:
+            groups: ['read_registration','write_registration']
+        hearFromOnlineSearch:
+            groups: ['read_registration','write_registration']
+        hearFromOnlineAd:
+            groups: ['read_registration','write_registration']
+        hearFromFriendFamily:
+            groups: ['read_registration','write_registration']
+        reasonInteriorDesigner:
+            groups: ['read_registration','write_registration']
+        hearWalkShop:
+            groups: ['read_registration','write_registration']
+        hearOthers:
+            groups: ['read_registration','write_registration']
+        reasonPromotions:
+            groups: ['read_registration','write_registration']
+        reasonTheBrand:
+            groups: ['read_registration','write_registration']
+        reasonTechnology:
+            groups: ['read_registration','write_registration']
+        reasonJapanese:
+            groups: ['read_registration','write_registration']
+        reasonTheDesign:
+            groups: ['read_registration','write_registration']
+        reasonAffordable:
+            groups: ['read_registration','write_registration']
+        reasonDesignerSuggested:
+            groups: ['read_registration','write_registration']
+        reasonFriendFamilySuggested:
+            groups: ['read_registration','write_registration']
+        reasonOthers:
+            groups: ['read_registration','write_registration']
 
 Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\ServiceSheet:
     attributes:

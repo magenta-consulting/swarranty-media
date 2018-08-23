@@ -4,6 +4,7 @@ namespace Magenta\Bundle\SWarrantyModelBundle\Command\Migration;
 
 use Doctrine\ORM\EntityManager;
 use Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\CaseAppointment;
+use Magenta\Bundle\SWarrantyModelBundle\Entity\Product\Product;
 use Magenta\Bundle\SWarrantyModelBundle\Entity\System\FullTextSearchInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -64,9 +65,9 @@ EOT
 						$em->persist($object);
 						$output->writeln('Flushing object ' . $object->getFullText());
 						$em->flush($object);
-						
 					}
 				}
+
 //				if($class === CaseAppointment::class) {
 //					$repo    = $this->registry->getRepository($class);
 //					$objects = $repo->findAll();

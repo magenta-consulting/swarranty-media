@@ -2,6 +2,7 @@
 
 namespace Magenta\Bundle\SWarrantyModelBundle\Entity\Customer;
 
+use Doctrine\DBAL\Exception\ConstraintViolationException;
 use Magenta\Bundle\SWarrantyModelBundle\Entity\Organisation\Organisation;
 use Magenta\Bundle\SWarrantyModelBundle\Entity\Person\Person;
 use Magenta\Bundle\SWarrantyModelBundle\Entity\Product\Dealer;
@@ -57,7 +58,25 @@ class WarrantyCase extends FullTextSearch implements DecisionMakingInterface {
 		$this->serviceSheets   = new ArrayCollection();
 		$this->serviceNotes    = new ArrayCollection();
 		$this->assigneeHistory = new ArrayCollection();
-		$this->initiateNumber();
+	}
+	
+	public function getServiceNotesString() {
+		$noteStr = '';
+		/** @var ServiceNote $note */
+		foreach($this->serviceNotes as $note) {
+			$noteStr += $note->getDescription();
+		}
+		
+		return $noteStr;
+	}
+	
+	public function getAssigneeString() {
+		$assigneeStr = '';
+		if( ! empty($this->assignee) && ! empty($p = $this->assignee->getPerson())) {
+			$assigneeStr = $p->getName();
+		}
+		
+		return $assigneeStr;
 	}
 	
 	public function getOrganisation(): ?Organisation {
@@ -187,8 +206,11 @@ class WarrantyCase extends FullTextSearch implements DecisionMakingInterface {
 				$this->assigned  = true;
 				$this->responded = true;
 				$this->completed = true;
-				$this->closed    = true;
-				$this->status    = self::STATUS_CLOSED;
+				if(empty($this->closed)) {
+					$this->closedAt = new \DateTime();
+				}
+				$this->closed = true;
+				$this->status = self::STATUS_CLOSED;
 				break;
 		}
 	}
@@ -198,10 +220,14 @@ class WarrantyCase extends FullTextSearch implements DecisionMakingInterface {
 		if(empty($this->number)) {
 			$now          = new \DateTime();
 			$this->number = User::generateCharacterCode();
-			if( ! empty($this->purchaseDate)) {
-				$this->number .= '-' . $this->purchaseDate->format('my');
+			if( ! empty($this->warranty)) {
+				if( ! empty($this->warranty->getPurchaseDate())) {
+					$this->number .= '-' . $this->warranty->getPurchaseDate()->format('my');
+				} else {
+					$this->number .= '-' . $this->warranty->getId();
+				}
 			} else {
-				$this->number .= '-' . 'XXXX';
+				throw new \Exception('Warranty cannot be null');
 			}
 			$this->number .= '-' . $now->format('my');
 		}
@@ -416,6 +442,13 @@ class WarrantyCase extends FullTextSearch implements DecisionMakingInterface {
 	 * @ORM\Column(type="time", nullable=true)
 	 */
 	protected
+		$appointmentFrom;
+	
+	/**
+	 * @var \DateTime|null
+	 * @ORM\Column(type="time", nullable=true)
+	 */
+	protected
 		$appointmentTo;
 	
 	/**
@@ -501,6 +534,13 @@ class WarrantyCase extends FullTextSearch implements DecisionMakingInterface {
 	 */
 	protected
 		$description;
+	
+	/**
+	 * @var string|null
+	 * @ORM\Column(type="string",nullable=true)
+	 */
+	protected
+		$specialRemarks;
 	
 	/**
 	 * @return Warranty|null
@@ -942,5 +982,33 @@ class WarrantyCase extends FullTextSearch implements DecisionMakingInterface {
 	 */
 	public function setUpdatedAt(?\DateTime $updatedAt): void {
 		$this->updatedAt = $updatedAt;
+	}
+	
+	/**
+	 * @return null|string
+	 */
+	public function getSpecialRemarks(): ?string {
+		return $this->specialRemarks;
+	}
+	
+	/**
+	 * @param null|string $specialRemarks
+	 */
+	public function setSpecialRemarks(?string $specialRemarks): void {
+		$this->specialRemarks = $specialRemarks;
+	}
+	
+	/**
+	 * @return \DateTime|null
+	 */
+	public function getAppointmentFrom(): ?\DateTime {
+		return $this->appointmentFrom;
+	}
+	
+	/**
+	 * @param \DateTime|null $appointmentFrom
+	 */
+	public function setAppointmentFrom(?\DateTime $appointmentFrom): void {
+		$this->appointmentFrom = $appointmentFrom;
 	}
 }

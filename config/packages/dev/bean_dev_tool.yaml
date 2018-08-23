@@ -1,6 +1,6 @@
 bean_dev_tool:
-    library_source: /srv/http/libraries/
-    library_workspace: /srv/http/smart-warranty-media/libraries/
+    library_source: E:\wamp31\www\libraries\swarranty\
+    library_workspace: E:\wamp31\www\swarranty\media\libraries\
     components: ~
     bundles:
         - MagentaSWarrantyModelBundle

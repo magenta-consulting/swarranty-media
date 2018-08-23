@@ -73,8 +73,9 @@ class CaseAppointment extends FullTextSearch {
 		if( ! empty($this->case)) {
 			$this->case->addServiceSheet($ss);
 		}
+		$this->serviceSheet = $ss;
 		
-		return $ss;
+		return $this->serviceSheet;
 	}
 	
 	public function getOrganisation(): ?Organisation {
@@ -161,6 +162,14 @@ class CaseAppointment extends FullTextSearch {
 	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	protected $appointmentAt;
+	
+	
+	/**
+	 * @var \DateTime|null
+	 * @ORM\Column(type="time", nullable=true)
+	 */
+	protected
+		$appointmentFrom;
 	
 	/**
 	 * @var \DateTime|null
@@ -352,5 +361,19 @@ class CaseAppointment extends FullTextSearch {
 	 */
 	public function setAppointmentTo(?\DateTime $appointmentTo): void {
 		$this->appointmentTo = $appointmentTo;
+	}
+	
+	/**
+	 * @return \DateTime|null
+	 */
+	public function getAppointmentFrom(): ?\DateTime {
+		return $this->appointmentFrom;
+	}
+	
+	/**
+	 * @param \DateTime|null $appointmentFrom
+	 */
+	public function setAppointmentFrom(?\DateTime $appointmentFrom): void {
+		$this->appointmentFrom = $appointmentFrom;
 	}
 }
