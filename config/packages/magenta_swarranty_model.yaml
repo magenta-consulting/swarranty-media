@@ -1,3 +1,11 @@
+services:
+    sonata_media_resizer:
+        class: Magenta\Bundle\SWarrantyModelBundle\SonataMedia\Resizer\SimpleResizer
+        arguments:
+            - '@sonata.media.adapter.image.gd'
+            - '%sonata.media.resizer.simple.adapter.mode%'
+            - '@sonata.media.metadata.proxy'
+
 parameters:
     s3_version: latest
     s3_bucket_name: magenta-consulting
@@ -10,6 +18,8 @@ parameters:
     MEDIA_API_PREFIX: '%env(MEDIA_API_PREFIX)%'
     PDF_API_BASE_URL:  '%env(resolve:PDF_API_BASE_URL)%'
     PDF_DOWNLOAD_PREFIX: '%env(resolve:PDF_DOWNLOAD_PREFIX)%'
+
+    sonata.media.thumbnail.format: Magenta\Bundle\SWarrantyModelBundle\SonataMedia\Thumbnail\FormatThumbnail
 
 doctrine:
     dbal:
@@ -24,7 +34,7 @@ doctrine:
                     SonataMediaBundle: ~
                 entity_listeners:
                     entities:
-#                    Will not work for Mere Interfaces
+                        #                    Will not work for Mere Interfaces
                         -
                             class:  "Magenta\\Bundle\\SWarrantyModelBundle\\Entity\\System\\FullTextSearch"
                             listener:
@@ -137,6 +147,9 @@ doctrine:
                                     class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Customer\\CaseAppointmentListener"
                                     event:
                                         -
+                                            type: postLoad
+                                            method: postLoadHandler
+                                        -
                                             type: postPersist
                                             method: postPersistHandler
                                         -
@@ -193,6 +206,9 @@ doctrine:
                                 -
                                     class: "Magenta\\Bundle\\SWarrantyModelBundle\\Doctrine\\Customer\\WarrantyCaseListener"
                                     event:
+                                        -
+                                            type: postLoad
+                                            method: postLoadHandler
                                         -
                                             type: postPersist
                                             method: postPersistHandler
@@ -410,6 +426,7 @@ sonata_media:
         service_sheet:
             providers:
                 - sonata.media.provider.image
+                - sonata.media.provider.file
             download:
                 strategy: sonata.media.security.public_strategy
                 mode: http
@@ -417,6 +434,7 @@ sonata_media:
         receipt_image:
             providers:
                 - sonata.media.provider.image
+                - sonata.media.provider.file
             download:
                 strategy: sonata.media.security.public_strategy
                 mode: http
@@ -471,10 +489,44 @@ sonata_media:
         server:
             path: 'https://s3-%s3_region%.amazonaws.com/%s3_bucket_name%/%s3_directory%'
             #https://s3-ap-southeast-1.amazonaws.com/magenta-consulting/local/default/0001/01/c5971b853c7c1407ebdb7dd7f0a31bf845aee71e.jpeg
-#            path: /upload/media
+    #            path: /upload/media
     providers:
         image:
             filesystem: sonata.media.filesystem.s3
+            resizer: sonata_media_resizer
+        file:
+            filesystem: sonata.media.filesystem.s3
+            allowed_mime_types:
+                - application/octet-stream
+                - binary/octet-stream
+                - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                - image/jpeg
+                - image/gif
+                - image/tiff
+                # Defaults:
+                - application/pdf
+                - application/x-pdf
+                - application/rtf
+                - text/html
+                - text/rtf
+                - text/plain
+                - application/excel
+                - application/msword
+                - application/vnd.ms-excel
+                - application/vnd.ms-powerpoint
+                - application/vnd.ms-powerpoint
+                - application/vnd.oasis.opendocument.text
+                - application/vnd.oasis.opendocument.graphics
+                - application/vnd.oasis.opendocument.presentation
+                - application/vnd.oasis.opendocument.spreadsheet
+                - application/vnd.oasis.opendocument.chart
+                - application/vnd.oasis.opendocument.formula
+                - application/vnd.oasis.opendocument.database
+                - application/vnd.oasis.opendocument.image
+                - text/comma-separated-values
+                - text/xml
+                - application/xml
+                - application/zip
 
     filesystem:
         local:
@@ -488,7 +540,7 @@ sonata_media:
             region:      '%s3_region%'
             version:     '%s3_version%' # latest by default (cf. https://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/configuration.html#version)
             sdk_version: 3
-#            sdk_version: '%s3_sdk_version%' # 2 by default
+            #            sdk_version: '%s3_sdk_version%' # 2 by default
 
             directory:   "%s3_directory%"
 
@@ -496,10 +548,10 @@ sonata_media:
             #region:         s3.amazonaws.com # change if not using US Standard region
             storage:        standard # can be one of: standard or reduced
             acl:            private # this no longer works, private by default can be one of: public, private, open, auth_read, owner_read, owner_full_control
-#            encryption:     aes256 # can be aes256 or not set
+            #            encryption:     aes256 # can be aes256 or not set
             cache_control:  max-age=86400 # or any other
-#            meta:
- #               key1:       value1 #any amount of metas(sent as x-amz-meta-key1 = value1)
+    #            meta:
+    #               key1:       value1 #any amount of metas(sent as x-amz-meta-key1 = value1)
     # if you don't use default namespace configuration
     class:
         media: Magenta\Bundle\SWarrantyModelBundle\Entity\Media\Media
@@ -527,7 +579,7 @@ monolog:
             handler: swift
         swift:
             type:       swift_mailer
-            from_email: 'no-reply@magentapulse.com'
+            from_email: 'no-reply-swarranty@magentapulse.com'
             to_email:   'binh@sunrise.vn'
             subject:    'SWarranty - An Error Occurred! %%message%%'
             level:      debug
