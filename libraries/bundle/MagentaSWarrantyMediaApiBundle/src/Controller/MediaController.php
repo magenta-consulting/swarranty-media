@@ -106,15 +106,7 @@ class MediaController extends SonataMediaController
         $errorMsg = '';
         /** @var FormError $error */
         foreach ($errors as $error) {
-            $errorMsg .= $error->getMessage().' Caused by: '.$error->getCause();
-            $_errors = $error->getChildren();
-            if (!empty($_errors)) {
-                /** @var FormError $_error */
-                foreach ($_errors as $_error) {
-                    $errorMsg .= $_error->getMessage().' Caused by: '.$_error->getCause();
-                }
-
-            }
+            $errorMsg .= $error->getMessage().' Caused by: '.$error->getCause().'  data class: '.get_class($form->getData());
         }
 
         return new JsonResponse($errorMsg);
