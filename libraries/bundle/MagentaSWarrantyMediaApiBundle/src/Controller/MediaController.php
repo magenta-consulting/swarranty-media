@@ -62,8 +62,8 @@ class MediaController extends SonataMediaController
     /**
      * Write a medium, this method is used by both POST and PUT action methods.
      *
-     * @param Request                $request
-     * @param MediaInterface         $media
+     * @param Request $request
+     * @param MediaInterface $media
      * @param MediaProviderInterface $provider
      *
      * @return View|FormInterface
@@ -78,9 +78,10 @@ class MediaController extends SonataMediaController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            /** @var Media $media */
-            $media = $form->getData();
+//        if ($form->isValid()) {
+        /** @var Media $media */
+        $media = $form->getData();
+        if ($media instanceof MediaInterface) {
             if (!empty($mc = $request->query->get('context'))) {
                 $media->setContext($mc);
             }
