@@ -3,11 +3,11 @@
 namespace Magenta\Bundle\SWarrantyModelBundle\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\WarrantyCase;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class WarrantyCaseRepository extends ServiceEntityRepository {
-	public function __construct(RegistryInterface $registry) {
+	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, WarrantyCase::class);
 	}
 	

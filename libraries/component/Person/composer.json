@@ -1,0 +1,32 @@
+{
+    "name": "beancomponent/person",
+    "type": "php-component",
+    "description": "Provides a Component for Person Domain Model.",
+    "keywords": [ "php Person components" ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Peter Bean",
+            "email": "peterbean@beancomponent.com"
+        }
+    ],
+    "require": {
+        "php": "^5.6|^7.0",
+        "beancomponent/thing": "^0.1"
+    },
+    "require-dev": {
+    },
+    "suggest": {
+    },
+    "autoload": {
+        "psr-4": { "Bean\\Component\\Person\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Bean\\Component\\Person\\spec\\": "tests/spec/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    }
+}
