@@ -91,6 +91,8 @@ class MediaController extends SonataMediaController
                 'imageServiceSheet' => ServiceSheet::class,
             ], $request);
 
+            var_dump($media);
+
             $this->mediaManager->save($media);
 
             $context = new Context();
