@@ -92,6 +92,7 @@ class MediaController extends SonataMediaController
             ], $request);
 
             var_dump(empty($media->getBinaryContent()));
+            var_dump(($media->getBinaryContent()));
             var_dump($media->getWidth());
             var_dump($media->getHeight());
             exit();
