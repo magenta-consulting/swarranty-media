@@ -101,11 +101,10 @@ class MediaController extends SonataMediaController
                 $mimeType = $uploaded->getMimeType();
 
                 if (strpos($mimeType, 'image') !== false) {
-                    var_dump(getimagesize($mediaPath));
+                    list($width, $height, $type, $attr) = getimagesize($mediaPath);
+                    $media->setWidth($width);
+                    $media->setHeight($height);
                 }
-
-                exit();
-
             }
 
             $this->mediaManager->save($media);
