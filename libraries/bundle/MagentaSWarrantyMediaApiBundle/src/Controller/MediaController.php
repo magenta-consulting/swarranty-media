@@ -18,6 +18,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,7 +93,9 @@ class MediaController extends SonataMediaController
             ], $request);
 
             var_dump(empty($media->getBinaryContent()));
-            var_dump(($media->getBinaryContent()));
+            /** @var UploadedFile $uploaded */
+            $uploaded = $media->getBinaryContent();
+            var_dump($uploaded->getRealPath());
             var_dump($media->getWidth());
             var_dump($media->getHeight());
             exit();
