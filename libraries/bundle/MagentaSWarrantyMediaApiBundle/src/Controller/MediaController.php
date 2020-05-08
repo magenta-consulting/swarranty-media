@@ -91,7 +91,7 @@ class MediaController extends SonataMediaController
                 'imageServiceSheet' => ServiceSheet::class,
             ], $request);
 
-            var_dump($media->getWidth().'  '.$media->getHeight()); exit();
+            var_dump($media->getWidth().'  '.$media->getHeight().' '.empty($media->getBinaryContent())); exit();
 
             $this->mediaManager->save($media);
 
