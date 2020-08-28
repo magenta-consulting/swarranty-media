@@ -172,6 +172,12 @@ class Registration implements ThingChildInterface
 
     /**
      * @var boolean
+     * @ORM\Column(type="boolean", options={"default":true})
+     */
+    protected $emailSent = false;
+
+    /**
+     * @var boolean
      * @ORM\Column(type="boolean", options={"default":false})
      */
     protected $verified = false;
@@ -795,5 +801,21 @@ class Registration implements ThingChildInterface
     public function setHearFromShopWalkIn(?bool $hearFromShopWalkIn): void
     {
         $this->hearFromShopWalkIn = $hearFromShopWalkIn;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmailSent(): bool
+    {
+        return $this->emailSent;
+    }
+
+    /**
+     * @param bool $emailSent
+     */
+    public function setEmailSent(bool $emailSent): void
+    {
+        $this->emailSent = $emailSent;
     }
 }

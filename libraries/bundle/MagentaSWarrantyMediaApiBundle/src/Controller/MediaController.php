@@ -2,14 +2,14 @@
 
 namespace Magenta\Bundle\SWarrantyMediaApiBundle\Controller;
 
-use Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\ServiceSheet;
-use Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\Warranty;
-use Magenta\Bundle\SWarrantyModelBundle\Entity\Media\Media;
-use Sonata\MediaBundle\Controller\Api\MediaController as SonataMediaController;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\View\View as FOSRestView;
+use Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\ServiceSheet;
+use Magenta\Bundle\SWarrantyModelBundle\Entity\Customer\Warranty;
+use Magenta\Bundle\SWarrantyModelBundle\Entity\Media\Media;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sonata\MediaBundle\Controller\Api\MediaController as SonataMediaController;
 use Sonata\MediaBundle\Filesystem\Local;
 use Sonata\MediaBundle\Form\Type\ApiMediaType;
 use Sonata\MediaBundle\Model\MediaInterface;
@@ -63,10 +63,6 @@ class MediaController extends SonataMediaController
     /**
      * Write a medium, this method is used by both POST and PUT action methods.
      *
-     * @param Request $request
-     * @param MediaInterface $media
-     * @param MediaProviderInterface $provider
-     *
      * @return View|FormInterface
      */
     protected function handleWriteMedium(Request $request, MediaInterface $media, MediaProviderInterface $provider)
@@ -100,7 +96,7 @@ class MediaController extends SonataMediaController
                 $mediaPath = $uploaded->getRealPath();
                 $mimeType = $uploaded->getMimeType();
 
-                if (strpos($mimeType, 'image') !== false) {
+                if (false !== strpos($mimeType, 'image')) {
                     list($width, $height, $type, $attr) = getimagesize($mediaPath);
                     $media->setWidth($width);
                     $media->setHeight($height);
@@ -151,10 +147,23 @@ class MediaController extends SonataMediaController
      */
     public function getMediumBinaryViewAction(Request $request, $id, $format = MediaProviderInterface::FORMAT_REFERENCE)
     {
+        /** @var Media $media */
         $media = $this->getMedium($id);
 
         if (!$media) {
             throw new NotFoundHttpException(sprintf('unable to find the media with the id : %s', $id));
+        }
+
+        $token = $request->get('token');
+        if ($token !== null) {
+            if ($warranty = $media->getReceiptImageWarranty()) {
+                if ($org = $warranty->getOrganisation())
+                    if ($token !== $org->getSystem()->getAdminToken()) {
+                        if ($warranty->getRegistration()->isEmailSent()) {
+                            throw new AccessDeniedException();
+                        }
+                    }
+            }
         }
 
         if (!$this->mediaPool->getDownloadStrategy($media)->isGranted($media, $request)) {
@@ -238,8 +247,6 @@ class MediaController extends SonataMediaController
     }
 
     /**
-     * @param MediaInterface $media
-     *
      * @return MediaProviderInterface
      */
     public function getProvider(MediaInterface $media)
@@ -247,9 +254,6 @@ class MediaController extends SonataMediaController
         return $this->mediaPool->getProvider($media->getProviderName());
     }
 
-    /**
-     * @param RegistryInterface $registry
-     */
     public function setRegistry(RegistryInterface $registry): void
     {
         $this->registry = $registry;
