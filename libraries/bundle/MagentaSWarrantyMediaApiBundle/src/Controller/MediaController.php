@@ -155,14 +155,13 @@ class MediaController extends SonataMediaController
         }
 
         $token = $request->get('token');
-        if ($token !== null) {
-            if ($warranty = $media->getReceiptImageWarranty()) {
-                if ($org = $warranty->getOrganisation())
-                    if ($token !== $org->getSystem()->getAdminToken()) {
-                        if ($warranty->getRegistration()->isEmailSent()) {
-                            throw new AccessDeniedException();
-                        }
+        if ($warranty = $media->getReceiptImageWarranty()) {
+            if ($org = $warranty->getOrganisation()) {
+                if ($token !== $org->getSystem()->getAdminToken()) {
+                    if ($warranty->getRegistration()->isEmailSent()) {
+                        throw new AccessDeniedException();
                     }
+                }
             }
         }
 
