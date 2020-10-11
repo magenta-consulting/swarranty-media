@@ -73,6 +73,8 @@ class MediaController extends SonataMediaController
             'csrf_protection' => false,
         ]);
 
+        $token = $request->get('token');
+
         $form->handleRequest($request);
 
 //        if ($form->isValid()) {
@@ -87,6 +89,8 @@ class MediaController extends SonataMediaController
                 'receiptImageWarranty' => Warranty::class,
                 'imageServiceSheet' => ServiceSheet::class,
             ], $request);
+
+            $media->setToken($token);
 
             var_dump(empty($media->getBinaryContent()));
             /** @var UploadedFile $uploaded */
@@ -157,10 +161,10 @@ class MediaController extends SonataMediaController
         $token = $request->get('token');
         if ($warranty = $media->getReceiptImageWarranty()) {
             if ($org = $warranty->getOrganisation()) {
-                if ($token !== $org->getSystem()->getAdminToken()) {
-                    if ($warranty->getRegistration()->isEmailSent()) {
+                if ($token !== $org->getSystem()->getAdminToken() && $token !== $media->getToken() && !empty($token)) {
+//                    if ($warranty->getRegistration()->isEmailSent()) {
                         throw new AccessDeniedException();
-                    }
+//                    }
                 }
             }
         }
